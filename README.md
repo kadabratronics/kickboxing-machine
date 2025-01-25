@@ -12,8 +12,8 @@ A simple random character generator webpage that will call out kickboxing combos
 
 ## Example 
 
-just punch combos - https://9.fail/krav.html
-punch and kick combos - https://9.fail/krav-kick.html
+- just punch combos - https://9.fail/krav.html
+- punch and kick combos - https://9.fail/krav-kick.html
 
 ```⠀
 ⠀⠀⠀⠀⠀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀

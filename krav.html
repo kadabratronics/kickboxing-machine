@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <title>Random Number Reader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000000;
+        }
+        .container {
+            text-align: center;
+        }
+        .number {
+            font-size: 50rem;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin: 20px 0;
+        }
+        .start-button {
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="start-button" class="start-button">Start</button>
+        <div id="number" class="number" style="display: none;">-</div>
+    </div>
+
+    <script>
+        function getRandomNumber() {
+            return Math.floor(Math.random() * 4) + 1;
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function updateNumber() {
+            const numberElement = document.getElementById('number');
+            const newNumber = getRandomNumber();
+            const newColor = getRandomColor();
+
+            numberElement.textContent = newNumber;
+            numberElement.style.color = newColor;
+            readNumber(newNumber);
+        }
+
+        function readNumber(number) {
+            const speech = new SpeechSynthesisUtterance(number);
+            speech.lang = 'en-US';
+
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+	    if (preferredVoice) {
+                speech.voice = preferredVoice;
+            }
+
+            window.speechSynthesis.speak(speech);
+        }
+
+        function startApp() {
+            const startButton = document.getElementById('start-button');
+            const numberElement = document.getElementById('number');
+
+            startButton.style.display = 'none';
+            numberElement.style.display = 'block';
+
+            updateNumber();
+            setInterval(updateNumber, 4000);
+        }
+
+        document.getElementById('start-button').addEventListener('click', () => {
+            // Ensures voices are loaded before starting
+            if (speechSynthesis.getVoices().length === 0) {
+                speechSynthesis.addEventListener('voiceschanged', startApp);
+            } else {
+                startApp();
+            }
+        });
+    </script>
+</body>
+</html>

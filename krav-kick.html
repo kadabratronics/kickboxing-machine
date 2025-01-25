@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <title>Random Number and Kick Reader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000000;
+        }
+        .container {
+            text-align: center;
+        }
+        .number {
+            font-size: 10rem;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin: 20px 0;
+        }
+        .start-button {
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="start-button" class="start-button">Start</button>
+        <div id="number" class="number" style="display: none;">-</div>
+    </div>
+
+    <script>
+        function getRandomEntry() {
+            const options = [1, 2, 3, 4, '4L', '4R', '4F'];
+            const randomIndex = Math.floor(Math.random() * options.length);
+            return options[randomIndex];
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function updateDisplay() {
+            const numberElement = document.getElementById('number');
+            const newEntry = getRandomEntry();
+            const newColor = getRandomColor();
+
+            numberElement.textContent = newEntry;
+            numberElement.style.color = newColor;
+            readEntry(newEntry);
+        }
+
+        function readEntry(entry) {
+            const speech = new SpeechSynthesisUtterance(entry.toString());
+            speech.lang = 'en-US'; // Set to English (United States)
+
+            // Get available voices and pick a preferred English one
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+            if (preferredVoice) {
+                speech.voice = preferredVoice;
+            }
+
+            window.speechSynthesis.speak(speech);
+        }
+
+        function startApp() {
+            const startButton = document.getElementById('start-button');
+            const numberElement = document.getElementById('number');
+
+            startButton.style.display = 'none';
+            numberElement.style.display = 'block';
+
+            updateDisplay();
+            setInterval(updateDisplay, 4000);
+        }
+
+        document.getElementById('start-button').addEventListener('click', () => {
+            // Ensures voices are loaded before starting
+            if (speechSynthesis.getVoices().length === 0) {
+                speechSynthesis.addEventListener('voiceschanged', startApp);
+            } else {
+                startApp();
+            }
+        });
+    </script>
+</body>
+</html>
